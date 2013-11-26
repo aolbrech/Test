@@ -1,2 +1,3 @@
 New file which should only live inside Annik sub directory
 
+Stash command should pull this file without any problems for the text.txt file
