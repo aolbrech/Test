@@ -1,3 +1,6 @@
 New File which for subdirectory Natalie
 
 Should remain different
+
+Adapt file, and then only work inside Annik directory.
+Any pull/push will probably overwrite this as well
