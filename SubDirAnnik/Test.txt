@@ -1,6 +1,0 @@
-Add new test file.
-Check whether changes in this directory also overwrite the other subdirectories!!
-
-remote name test (changed from origin to anniktest)
-
-Try stash option command
