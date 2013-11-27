@@ -48,7 +48,11 @@
 #include "SimDataFormats/TrackerDigiSimLink/interface/PixelDigiSimLink.h"
 #include "SimDataFormats/TrackingHit/interface/PSimHitContainer.h"
 #include "SimTracker/Common/interface/SiG4UniversalFluctuation.h"
+<<<<<<< HEAD
 #include "SiPhase2DigitizerAlgorithm.h"
+=======
+#include "SimTracker/SiPhase2Digitizer/plugins/SiPhase2DigitizerAlgorithm.h"
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
 
 #include <gsl/gsl_sf_erf.h>
 #include "FWCore/Utilities/interface/RandomNumberGenerator.h"
@@ -144,7 +148,12 @@ SiPhase2DigitizerAlgorithm::SiPhase2DigitizerAlgorithm(const edm::ParameterSet& 
   Sigma0(conf.getParameter<double>("SigmaZero")),           // Charge diffusion constant 7->3.7
   SigmaCoeff(conf.getParameter<double>("SigmaCoeff")),      // delta in the diffusion across the strip pitch 
                               // (set between 0 to 0.9,  0-->flat Sigma0, 1-->Sigma_min=0 & Sigma_max=2*Sigma0
+<<<<<<< HEAD
   Dist300(0.0300),                                          //   normalized to 300micron Silicon
+=======
+   //D.B.: Dist300 replaced by moduleThickness, may not work with partially depleted sensors but works otherwise
+   //Dist300(0.0300),                                          //   normalized to 300micron Silicon
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
 
   ClusterWidth(conf.getParameter<double>("ClusterWidth")),  // Charge integration spread on the collection plane
 
@@ -734,6 +743,16 @@ void SiPhase2DigitizerAlgorithm::drift(const PSimHit& hit,
 
   float moduleThickness = pixdet->specificSurface().bounds().thickness();
   float stripPitch     = pixdet->specificTopology().pitch().first;
+<<<<<<< HEAD
+=======
+ 
+ 
+   int rowsPerRoc = pixdet->specificTopology().rowsperroc();	//D.B.:debug
+   int colsPerRoc = pixdet->specificTopology().colsperroc();	//D.B.:debug
+   int nColumns = pixdet->specificTopology().ncolumns();	//D.B.:debug
+   int nRows = pixdet->specificTopology().nrows();	//D.B.:debug
+ 
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
 #ifdef TP_DEBUG
   LogDebug ("Pixel Digitizer")
     << " Lorentz Tan " << TanLorenzAngleX << " " << TanLorenzAngleY <<" "
@@ -787,13 +806,24 @@ void SiPhase2DigitizerAlgorithm::drift(const PSimHit& hit,
                         YDriftDueToMagField*YDriftDueToMagField );
 
     // What is the charge diffusion after this path
+<<<<<<< HEAD
     Sigma = sqrt(DriftLength/Dist300) * Sigma0;    //D.B.: sigmaCoeff=0 means no modulation
+=======
+    Sigma = sqrt(DriftLength/moduleThickness) * (Sigma0 * moduleThickness/0.0300); //Sigma0=0.00037 is for 300um thickness (make sure moduleThickness is in [cm])
+    //D.B.: sigmaCoeff=0 means no modulation
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
     if (SigmaCoeff) Sigma *= (SigmaCoeff*cos(SegX*M_PI/stripPitch)*cos(SegX*M_PI/stripPitch)+1); 
                                                      //NB: divided by 4 to get a periodicity of stripPitch
 
     // Project the diffusion sigma on the collection plane
     Sigma_x = Sigma / CosLorenzAngleX ;
     Sigma_y = Sigma / CosLorenzAngleY ;
+<<<<<<< HEAD
+=======
+    //    if (rowsPerRoc==143) {//D.B.:debug
+    std::cout<<" stripPitch="<<stripPitch<<" rowsPerRoc="<<rowsPerRoc<<" colsPerRoc="<<colsPerRoc<<" nColumns="<<nColumns<<" nRows"<<nRows<<std::endl;//D.B.: for debug
+    //    }
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
 
     // Insert a charge loss due to Rad Damage here
     float energyOnCollector = ionization_points[i].energy(); // The energy that reaches the collector
@@ -1090,8 +1120,16 @@ void SiPhase2DigitizerAlgorithm::make_digis(float thePixelThresholdInE,
 
       int chan =  (*i).first;  // channel number
       std::pair<int,int> ip = PixelDigi::channelToPixel(chan);
+<<<<<<< HEAD
       int adc=0;  // ADC count as integer
 
+=======
+//    int adc=0;  // ADC count as integer
+
+      int adc=255;  // D.B.:changed for CBC
+
+/*     //D.B.
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
       // Do the miss calibration for calibration studies only.
       if(doMissCalibrate) {
 	int row = ip.first;  // X in row
@@ -1114,6 +1152,10 @@ void SiPhase2DigitizerAlgorithm::make_digis(float thePixelThresholdInE,
           }
         }
      } // Only enter this if the Adc changes for the outer layers
+<<<<<<< HEAD
+=======
+*/
+>>>>>>> d97f19bbb3f9fcd39191d2663fb204a50a27ecdb
 #ifdef TP_DEBUG
       LogDebug ("Pixel Digitizer")
 	<< (*i).first << " " << (*i).second << " " << signalInElectrons
